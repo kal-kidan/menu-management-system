@@ -17,7 +17,6 @@ export default function MenuPage() {
                     icon={Icons.layout}
                 />
             </div>
-            <MenuSelect />
             <FileSystemTree />
         </div>
     )

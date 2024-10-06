@@ -5,13 +5,12 @@ export function addActionsToTreeData(
     renderActionButton: (id: string, name: string) => React.ReactNode
 ): TreeDataItem[] {
     return data.map((item) => {
-        // Add actions to each tree item
         const newItem: TreeDataItem = {
             ...item,
-            actions: renderActionButton(item.id, item.name),
+            actions: renderActionButton(item?.id, item?.name),
         };
 
-        if (item.children) {
+        if (item?.children) {
             newItem.children = addActionsToTreeData(item.children, renderActionButton);
         }
 

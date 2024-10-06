@@ -6,7 +6,7 @@ import {
 } from '../configuration'
 
 
-import { SystemConst } from 'src/common/constant/system.const'
+import { SystemConst } from '../../common/constant'
 
 @Injectable()
 export class CookieService {

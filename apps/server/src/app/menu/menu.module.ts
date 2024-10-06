@@ -1,13 +1,12 @@
-import { Module } from '@nestjs/common';
-import { ProductService } from './product.service';
-import { ProductException } from './product.exception';
-import { ProductController } from './product.controller';
-import { ProductOwnerGuard } from './guard/product.guard';
-import { ProductByUserController } from './product.byUser.controller';
+import { Module } from "@nestjs/common";
+import { MenuController } from "./menu.controller";
+import { MenuException } from "./menu.exception";
+import { MenuService } from "./menu.service";
+
 
 @Module({
-    providers: [ProductService, ProductException, ProductOwnerGuard],
-    controllers: [ProductController, ProductByUserController],
-    exports: [ProductService]
+    providers: [MenuService, MenuException],
+    controllers: [MenuController],
+    exports: [MenuService]
 })
-export class ProductModule { }
+export class MenuModule { }

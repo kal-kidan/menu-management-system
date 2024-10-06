@@ -12,10 +12,10 @@ export default async function DashboardLayout({
 }: DashboardLayoutProps) {
     return (
         <div className=" min-h-screen bg-white ">
-            <aside className="fixed inset-y-0 z-[100] hidden w-[230px] flex-col md:flex bg-white p-4  ">
+            <aside className="fixed inset-y-0 z-[10] hidden w-[230px] flex-col md:flex bg-white p-4  ">
                 <SideBar />
             </aside>
-            <main className="fixed  w-full  sm:pl-[260px] h-screen overflow-y-auto pt-4">
+            <main className="fixed  w-full  md:pl-[260px] h-screen overflow-y-auto pt-4">
                 {children}
             </main>
         </div>

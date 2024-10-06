@@ -4,7 +4,6 @@ import { FAIL, Resp, Succeed } from '../../common/constant';
 import { CreateMenuDto, UpdateMenuDto } from './dto/menu.input.dto';
 import { IMenuItem } from './dto/menu';
 import { MenuException } from './menu.exception';
-import { MenuItem } from '@prisma/client';
 
 @Injectable()
 export class MenuService {
@@ -22,7 +21,7 @@ export class MenuService {
                     ...rest,
                     parent: parentId ? { connect: { id: parentId } } : undefined,
                 },
-                include: { parent: true },
+                include: { parent: true, children: true },
             });
             return Succeed(menuItem);
         } catch (error) {
@@ -35,9 +34,6 @@ export class MenuService {
                 where: {
                     parentId: null,
                 },
-                include: {
-                    children: true,
-                },
             });
             return Succeed(rootMenus);
         } catch (error) {
@@ -45,22 +41,28 @@ export class MenuService {
         }
     }
 
-    async findOneByIdOrFail(id: string): Promise<IMenuItem> {
-        const result: any[] = await this.prismaService.$queryRaw`
-          WITH RECURSIVE menu_hierarchy AS (
-            SELECT id, name, parentId
-            FROM "MenuItem"
-            WHERE id = ${id} -- Start with the given menu item ID
-            UNION
-            SELECT child.id, child.name, child.parentId
-            FROM "MenuItem" child
-            INNER JOIN menu_hierarchy parent ON child.parentId = parent.id
-          )
-          SELECT * FROM menu_hierarchy;
-        `;
-        const menuTree = this.buildMenuTree(result);
-        return menuTree;
+    async findOneByIdOrFail(id: string): Promise<Resp<IMenuItem>> {
+        try {
+            const result: any[] = await this.prismaService.$queryRaw`
+            WITH RECURSIVE menu_hierarchy AS (
+                SELECT id, name, "parentId"  -- Use quotes for "parentId"
+                FROM "MenuItem"
+                WHERE id = ${id} 
+                UNION
+                SELECT child.id, child.name, child."parentId"  -- Use quotes for "parentId"
+                FROM "MenuItem" child
+                INNER JOIN menu_hierarchy parent ON child."parentId" = parent.id  -- Use quotes for "parentId"
+            )
+            SELECT * FROM menu_hierarchy;
+            `;
+            const menuTree = this.buildMenuTree(result);
+            return Succeed(menuTree);
+        } catch (error) {
+            console.log({ error });
+            return FAIL(error.message, 500);
+        }
     }
+
 
     async update(id: string, updateMenuItemDto: UpdateMenuDto): Promise<Resp<IMenuItem>> {
         try {
@@ -80,7 +82,7 @@ export class MenuService {
     // Remove menu item
     async remove(id: string): Promise<Resp<boolean>> {
         try {
-            await this.findOneByIdOrFail(id);
+            // await this.findOneByIdOrFail(id);
             await this.prismaService.menuItem.delete({
                 where: { id },
             });

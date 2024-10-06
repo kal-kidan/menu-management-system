@@ -68,7 +68,8 @@ export class MenuController {
   @ApiResponse({ status: 404, description: 'Menu not found.' })
   async findOne(@Param('id') id: string): Promise<IMenuItem> {
     const res = await this.menuService.findOneByIdOrFail(id);
-    return res;
+     if (!res?.ok) throw new HttpException(res?.errMessage, res?.code);
+    return res.val;
   }
 
 
