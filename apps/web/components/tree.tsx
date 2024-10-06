@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import * as AccordionPrimitive from '@radix-ui/react-accordion'
 import { ChevronRight } from 'lucide-react'
 import { cva } from 'class-variance-authority'
@@ -24,6 +24,8 @@ interface TreeDataItem {
     actions?: React.ReactNode
     onClick?: () => void
 }
+
+
 
 type TreeProps = React.HTMLAttributes<HTMLDivElement> & {
     data: TreeDataItem[] | TreeDataItem
@@ -51,7 +53,7 @@ const TreeView = React.forwardRef<HTMLDivElement, TreeProps>(
         const [selectedItemId, setSelectedItemId] = React.useState<
             string | undefined
         >(initialSelectedItemId)
-
+        const [expandedItems, setExpandedItems] = React.useState<Set<string>>(new Set())
         const handleSelectChange = React.useCallback(
             (item: TreeDataItem | undefined) => {
                 setSelectedItemId(item?.id)
@@ -63,25 +65,42 @@ const TreeView = React.forwardRef<HTMLDivElement, TreeProps>(
         )
 
         const expandedItemIds = React.useMemo(() => {
-            if (!initialSelectedItemId) {
-                return [] as string[]
+            if (expandAll) {
+                const allIds: string[] = []
+                const collectIds = (items: TreeDataItem[] | TreeDataItem) => {
+                    if (Array.isArray(items)) {
+                        items.forEach(item => {
+                            allIds.push(item.id)
+                            if (item.children) {
+                                collectIds(item.children)
+                            }
+                        })
+                    } else if (items.children) {
+                        collectIds(items.children)
+                    }
+                }
+                collectIds(data)
+                return allIds
             }
 
+            if (!initialSelectedItemId) {
+                return Array.from(expandedItems)
+            }
             const ids: string[] = []
 
             function walkTreeItems(
                 items: TreeDataItem[] | TreeDataItem,
                 targetId: string
             ) {
-                if (items instanceof Array) {
+                if (Array.isArray(items)) {
                     for (let i = 0; i < items.length; i++) {
                         ids.push(items[i]!.id)
-                        if (walkTreeItems(items[i]!, targetId) && !expandAll) {
+                        if (walkTreeItems(items[i]!, targetId)) {
                             return true
                         }
-                        if (!expandAll) ids.pop()
+                        ids.pop()
                     }
-                } else if (!expandAll && items.id === targetId) {
+                } else if (items.id === targetId) {
                     return true
                 } else if (items.children) {
                     return walkTreeItems(items.children, targetId)
@@ -90,10 +109,10 @@ const TreeView = React.forwardRef<HTMLDivElement, TreeProps>(
 
             walkTreeItems(data, initialSelectedItemId)
             return ids
-        }, [data, expandAll, initialSelectedItemId])
+        }, [data, expandAll, initialSelectedItemId, expandedItems])
 
         return (
-            <div className={cn('overflow-hidden relative', className)}>
+            <div className={cn('overflow-hidden relative p-2', className)}>
                 <TreeItem
                     data={data}
                     ref={ref}
@@ -182,6 +201,11 @@ const TreeNode = ({
     const [value, setValue] = React.useState(
         expandedItemIds.includes(item.id) ? [item.id] : []
     )
+    // useEffect(() => {
+    //     const newItemsId = expandedItemIds.includes(item.id) ? [item.id] : []
+    //     setValue(newItemsId)
+
+    // }, [expandedItemIds])
     return (
         <AccordionPrimitive.Root
             type="multiple"
@@ -347,8 +371,8 @@ const TreeActions = ({
     return (
         <div
             className={cn(
-                isSelected ? 'block' : 'hidden',
-                'absolute right-3 group-hover:block'
+                // isSelected ? 'block' : 'hidden',
+                'hidden absolute right-3 group-hover:block '
             )}
         >
             {children}

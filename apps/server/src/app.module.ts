@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 import { ConfigurationModule } from './core/configuration';
 import { CookieModule } from './core/cookie';
 import { CorsModule } from './core/cors';
-// import { PrismaModule } from './core/database';
+import { PrismaModule } from './core/database';
 import { ExceptionModule } from './core/exception';
 import { LoggingModule } from './core/logging';
 import { LoggerModule } from './libraries/logger';
@@ -18,7 +18,7 @@ import { LoggerModule } from './libraries/logger';
     ExceptionModule,
     CookieModule,
     LoggingModule,
-    // PrismaModule,
+    PrismaModule,
     ConfigurationModule,
   ],
   controllers: [],

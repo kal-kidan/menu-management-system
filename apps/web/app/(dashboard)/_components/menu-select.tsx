@@ -9,7 +9,7 @@ import {
 
 export default function MenuSelect() {
     return (
-        <div className="w-64 pt-8 pb-4 rounded-lg">
+        <div className=" max-w-[300px] pt-8 pb-4 rounded-lg">
             <h2 className="text-sm text-muted-foreground  mb-2">Menu</h2>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
