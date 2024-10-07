@@ -11,6 +11,16 @@ import { selectSelectedMenu, selectMenu } from "@/lib/store/menu"
 import useFetchRootMenus from "@/hooks/use-fetch-menue"
 import { Button } from "@/components/ui/button"
 
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
+
+
+
+
 
 
 
@@ -44,17 +54,26 @@ export default function MenuSelect({ onClick }: { onClick: () => void }) {
                         ))}
                     </SelectContent>
                 </Select>
-                <Button
-                    variant="outline"
-                    size={"icon"}
-                    onClick={onClick}
-                >
-                    <Plus size={13} />
-                </Button>
+                <TooltipProvider>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button
+                                variant="outline"
+                                size={"icon"}
+                                onClick={onClick}
+                            >
+                                <Plus size={13} />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Add root item</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
+
             </div>
         </div>
     )
 }
-
 
 

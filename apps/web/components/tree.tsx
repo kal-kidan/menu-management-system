@@ -82,12 +82,10 @@ const TreeView = React.forwardRef<HTMLDivElement, TreeProps>(
                 collectIds(data)
                 return allIds
             }
-
             if (!initialSelectedItemId) {
                 return Array.from(expandedItems)
             }
             const ids: string[] = []
-
             function walkTreeItems(
                 items: TreeDataItem[] | TreeDataItem,
                 targetId: string
@@ -201,11 +199,6 @@ const TreeNode = ({
     const [value, setValue] = React.useState(
         expandedItemIds.includes(item.id) ? [item.id] : []
     )
-    // useEffect(() => {
-    //     const newItemsId = expandedItemIds.includes(item.id) ? [item.id] : []
-    //     setValue(newItemsId)
-
-    // }, [expandedItemIds])
     return (
         <AccordionPrimitive.Root
             type="multiple"

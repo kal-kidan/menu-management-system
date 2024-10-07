@@ -7,6 +7,7 @@ import { AppModule } from './app.module';
 import { ConfigurationService } from './core/configuration';
 import { CorsService } from './core/cors';
 import { LoggerService } from './libraries/logger';
+import { SeedService } from './core/database/seed.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,6 +15,10 @@ async function bootstrap() {
   const configurationService = app.get(ConfigurationService)
   const corsService = app.get(CorsService)
   const loggerService = app.get(LoggerService)
+
+
+  const seedService = app.get(SeedService);
+  await seedService.seedMenus();
 
   const logger = loggerService.create({ name: 'App' })
 

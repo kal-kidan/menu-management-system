@@ -11,10 +11,11 @@ import { rootMenuItem, selectMenuItems, selectSelectedItem, selectSelectedMenu, 
 import { useDispatch, useSelector } from 'react-redux'
 import useFetchSingleMenu from '@/hooks/use-fetch-items'
 import MenuSelect from './menu-select'
+import { useRouter } from 'next/navigation'
 
 
-export default function FileSystemTree() {
-
+export default function FileSystemTree({ expand }: { expand?: string }) {
+    const router = useRouter()
 
     const handleSelectChange = (item: TreeDataItem | undefined) => {
         dispatch(selectMenuItem(item))
@@ -25,6 +26,9 @@ export default function FileSystemTree() {
     const selectedMenu = useSelector(selectSelectedMenu);
     const dispatch = useDispatch();
 
+
+    const expandLogic = expand === "false" ? false : true
+    console.log({ expandLogic })
 
 
 
@@ -46,7 +50,7 @@ export default function FileSystemTree() {
     const itemWithAction = addActionsToTreeData(menuItems, renderActionButton)
     const rootMenus = useSelector(rootMenuItem)
 
-    const [expandActive, setExpandActive] = useState(true)
+
     const [createMode, setCreateMode] = useState(false)
     const [rootCreateMode, setRootCreateMode] = useState(false)
 
@@ -64,11 +68,12 @@ export default function FileSystemTree() {
 
 
     const handleExpandClick = () => {
-        setExpandActive(true)
-    }
+        window.location.href = '/system/menu?expand=true'; // Redirects to the expand page
+    };
+
     const handleCollapseClick = () => {
-        setExpandActive(false)
-    }
+        window.location.href = '/system/menu?expand=false'; // Redirects to the collapse page
+    };
 
 
 
@@ -93,14 +98,14 @@ export default function FileSystemTree() {
                 <div className="w-[300px]">
                     <div className="flex space-x-2 my-2">
                         <Button
-                            variant={expandActive ? "default" : "outline"}
+                            variant={expandLogic ? "default" : "outline"}
                             onClick={handleExpandClick}
                             className="w-32 rounded-full"
                         >
                             Expand All
                         </Button>
                         <Button
-                            variant={expandActive ? "outline" : "default"}
+                            variant={expandLogic ? "outline" : "default"}
                             onClick={handleCollapseClick}
                             className="w-32 rounded-full"
                         >
@@ -115,7 +120,7 @@ export default function FileSystemTree() {
                             }))
                         }))}
                         onSelectChange={handleSelectChange}
-                        expandAll={expandActive}
+                        expandAll={expandLogic}
                     // defaultNodeIcon={Folder}
                     // defaultLeafIcon={File}
                     />
