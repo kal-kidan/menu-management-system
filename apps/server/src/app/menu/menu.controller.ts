@@ -12,13 +12,12 @@ import {
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { MenuService } from './menu.service';
 import { CreateMenuDto, UpdateMenuDto } from './dto/menu.input.dto';
-import { MenuItem } from '@prisma/client';
 import { IMenuItem } from './dto/menu';
 
 @Controller('menu')
 @ApiTags('Menu')
 export class MenuController {
-  constructor(private readonly menuService: MenuService) { }
+  constructor(private readonly menuService: MenuService) {}
 
   @Post()
   @ApiOperation({ summary: 'Create a new menu item' })
@@ -40,8 +39,11 @@ export class MenuController {
     status: 200,
     description: 'Menu item updated successfully',
   })
-  async updateMenu(@Body() updateDto: UpdateMenuDto, @Param('id') id: string): Promise<IMenuItem> {
-    const resp = await this.menuService.update(id, updateDto,);
+  async updateMenu(
+    @Body() updateDto: UpdateMenuDto,
+    @Param('id') id: string,
+  ): Promise<IMenuItem> {
+    const resp = await this.menuService.update(id, updateDto);
     if (!resp.ok) throw new HttpException(resp.errMessage, resp.code);
     return resp.val;
   }
@@ -57,8 +59,6 @@ export class MenuController {
     return resp.val;
   }
 
-
-
   @Get(':id')
   @ApiOperation({ summary: 'Find a menu by ID' })
   @ApiResponse({
@@ -68,10 +68,9 @@ export class MenuController {
   @ApiResponse({ status: 404, description: 'Menu not found.' })
   async findOne(@Param('id') id: string): Promise<IMenuItem> {
     const res = await this.menuService.findOneByIdOrFail(id);
-     if (!res?.ok) throw new HttpException(res?.errMessage, res?.code);
+    if (!res?.ok) throw new HttpException(res?.errMessage, res?.code);
     return res.val;
   }
-
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a menu item by ID' })
