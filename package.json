@@ -7,7 +7,8 @@
     "dev": "pnpm run --parallel dev",
     "build": "pnpm run --filter server build && pnpm run --filter web build",
     "start": "pnpm run --parallel start",
-    "ensure": "pnpm -v || npm install -g pnpm && pnpm install"
+    "ensure": "pnpm -v || npm install -g pnpm && pnpm install",
+    "install-all": "pnpm recursive install"
   },
   "keywords": [],
   "author": "kalkidan",
