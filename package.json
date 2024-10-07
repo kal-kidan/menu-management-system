@@ -1,19 +1,19 @@
 {
-  "name": "@kal/test-project",
+  "name": "@kal/menu-management",
   "version": "1.0.0",
-  "description": "this is test project",
+  "description": "Menu management system.",
   "main": "index.js",
   "scripts": {
     "dev": "pnpm run --parallel dev",
     "build": "pnpm run --filter server build && pnpm run --filter web build",
     "start": "pnpm run --parallel start",
     "ensure": "pnpm -v || npm install -g pnpm && pnpm install",
-    "install-all": "pnpm recursive install"
+    "install-all": "pnpm recursive install",
+    "build:next": "pnpm --filter web run build",
+    "build:nest": "pnpm --filter server run build"
   },
   "keywords": [],
   "author": "kalkidan",
-  "dependencies": {
-  
-  },
+  "dependencies": {},
   "packageManager": "pnpm@9.2.0+sha512.98a80fd11c2e7096747762304106432b3ddc67dcf54b5a8c01c93f68a2cd5e05e6821849522a06fb76284d41a2660d5e334f2ee3bbf29183bf2e739b1dafa771"
 }
